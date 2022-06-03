@@ -1,4 +1,4 @@
-# Pacman Arcade Game
+# Pac-Man Arcade Game
 
 [Pac-Man](https://en.wikipedia.org/wiki/Pac-Man) is a maze action video game by Namco developed and released in 1980. This is a recreation of the arcade game in Unity for *educational purposes only*. This project is based on a tutorial version of the project created by [Zigurous](https://github.com/zigurous).
 
