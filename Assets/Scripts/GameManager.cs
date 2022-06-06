@@ -222,6 +222,7 @@ public class GameManager : MonoBehaviour {
         // stop all ghosts temporarily 
         for (int i = 0; i < this.ghosts.Length; i++) {
             this.ghosts[i].movement.SetDirection(Vector2.zero, true);
+            this.ghosts[i].home.terminate = true;
         }
 
         yield return new WaitForSeconds(2);

@@ -6,6 +6,7 @@ public class GhostHome : GhostBehavior {
 
     public Transform inside;  // transform inside of the house
     public Transform outside; // transform outside of the house
+    public bool terminate; // terminate the transition animation if the round has been won
 
     private void OnEnable() {
         StopAllCoroutines();
@@ -13,7 +14,8 @@ public class GhostHome : GhostBehavior {
 
     private void OnDisable() {
         // check for active self to prevent error when object is destroyed
-        if (this.gameObject.activeSelf) {
+        // if the round was won, do not start the transition animation
+        if (this.gameObject.activeSelf && !this.terminate) {
             StartCoroutine(ExitTransition());
         }
     }
@@ -46,8 +48,17 @@ public class GhostHome : GhostBehavior {
         // time elasped
         float elapsed = 0.0f;
 
+        // allow blinky to exit the house immediately
+        if (this.ghost.name == "Blinky") {
+            elapsed = 0.5f;
+        }
+
         // animate to the starting point
         while (elapsed < duration) {
+            // pause the transition animation
+            if (terminate) {
+                yield return new WaitForSeconds(6);
+            }
             // interpolate from current position and inside position by the percentage of time
             // once the percentage is 1 (elapsed / duration), the ghost was fully transitioned
             this.ghost.SetPosition(Vector3.Lerp(position, this.inside.position, elapsed / duration));
@@ -62,6 +73,10 @@ public class GhostHome : GhostBehavior {
 
         // animate ghost exiting the house
         while (elapsed < duration) {
+            // pause the transition animation
+            if (terminate) {
+                yield return new WaitForSeconds(6);
+            }
             this.ghost.SetPosition(Vector3.Lerp(this.inside.position, this.outside.position, elapsed / duration));
             elapsed += Time.deltaTime;
             yield return null;

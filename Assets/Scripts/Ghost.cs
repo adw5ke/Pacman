@@ -54,6 +54,8 @@ public class Ghost : MonoBehaviour {
         if (this.initialBehavior != null) {
             this.initialBehavior.Enable();
         }
+
+        this.home.terminate = false;
     }
 
     public void SetPosition(Vector3 position) {
