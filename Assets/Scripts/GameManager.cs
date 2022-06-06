@@ -455,7 +455,9 @@ public class GameManager : MonoBehaviour {
     public void PowerPelletEaten(PowerPellet pellet) {
         // enable frightened mode for the pellet's duration
         for (int i = 0; i < this.ghosts.Length; i++) {
-            this.ghosts[i].frightened.Enable(pellet.duration);
+            if(!this.ghosts[i].ghostEaten.enabled) {
+                this.ghosts[i].frightened.Enable(pellet.duration);
+            }
         }
 
         this.isFrightened = true;

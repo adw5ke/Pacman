@@ -6,6 +6,8 @@ public class GhostHome : GhostBehavior {
 
     public Transform inside;  // transform inside of the house
     public Transform outside; // transform outside of the house
+    private int ghostLayer = 7;
+    private int phaseLayer = 12;
     public bool terminate; // terminate the transition animation if the round has been won
 
     private void OnEnable() {
@@ -30,6 +32,7 @@ public class GhostHome : GhostBehavior {
 
     // ghost exits the house
     private IEnumerator ExitTransition() {
+        this.ghost.gameObject.layer = this.phaseLayer; 
         this.ghost.isExitingHouse = true;
         // turn off movement while we manually animate the position
         // force the movement up through the house wall
@@ -87,6 +90,7 @@ public class GhostHome : GhostBehavior {
         this.ghost.movement.rigidbody.isKinematic = false;
         this.ghost.movement.enabled = true;
         this.ghost.isExitingHouse = false;
+        this.ghost.gameObject.layer = this.ghostLayer; 
         // this.ghost.ghostEaten.Disable(); // TODO: is this correct?
     }
 }
