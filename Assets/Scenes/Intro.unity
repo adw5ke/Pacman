@@ -10319,11 +10319,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ghosts: {fileID: 1679035801}
+  lifeDisplay: {fileID: 277163124}
   pacman: {fileID: 1177071467}
   playerOne: {fileID: 832340316}
   ready: {fileID: 959509246}
   oneUp: {fileID: 955113812}
-  lifeDisplay: {fileID: 277163124}
+  highScoreText: {fileID: 7249316}
 --- !u!1 &1442216304
 GameObject:
   m_ObjectHideFlags: 0

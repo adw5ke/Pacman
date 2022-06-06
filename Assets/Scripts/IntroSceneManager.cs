@@ -11,12 +11,11 @@ public class IntroSceneManager : MonoBehaviour {
     // audio source is handled in the editor
     public GameObject ghosts;
     public GameObject lifeDisplay;
-
     public Image pacman;
-
     public Text playerOne;
     public Text ready;
     public Text oneUp;
+    public Text highScoreText;
 
     private bool toggle = false; // toggle the 1up text
 
@@ -26,6 +25,7 @@ public class IntroSceneManager : MonoBehaviour {
 
     private void Start() {
         InvokeRepeating("ToggleOneUp", 0.125f, 0.25f); ;
+        this.highScoreText.text = HighScore.score.ToString().PadLeft(2, '0');
         StartCoroutine(IntroScene());
     }
 

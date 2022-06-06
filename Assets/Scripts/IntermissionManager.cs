@@ -2,28 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IntermissionManager : MonoBehaviour
-{
+public class IntermissionManager : MonoBehaviour {
     public Pacman pacman;
     public Pacman bigPacman;
     public Ghost blinky;
     public Sound intermission;
     
-    void Start()
-    {
+    void Start() {
         StartCoroutine(IntermissionScene());
     }
 
     
-    void Update()
-    {
+    void Update() {
         // if(this.pacman.transform.position.x < -14) {
         //     Debug.Log("Reached the end");
         // }
     }
 
-    private IEnumerator IntermissionScene()
-    {
+    private IEnumerator IntermissionScene() {
         // this.pacman.isKeysEnabled = false;
         this.pacman.ResetState();
         this.pacman.movement.speed = 8.0f;

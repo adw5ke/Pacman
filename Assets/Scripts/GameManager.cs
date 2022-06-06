@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour {
     public GameObject blackScreen;
     public int ghostMultiplier { get; private set; } = 1;  // keeps track of how many points are awarded with each ghost eaten during one power pellet cycle
     public int score { get; private set; }
-    public int highScore {get; private set; } = 0;
 
     [SerializeField]
     private int lives = 4;
@@ -55,7 +54,7 @@ public class GameManager : MonoBehaviour {
     public Text fruitScoreText;
 
     private void Awake() {
-        DontDestroyOnLoad(this);
+        // DontDestroyOnLoad(this);
         this.audioManager = FindObjectOfType<AudioManager>();
     }
 
@@ -72,7 +71,7 @@ public class GameManager : MonoBehaviour {
 
         // check for game restart
         if (this.lives <= 0 && Input.GetKeyDown(KeyCode.Space)) {
-            // SceneManager.LoadScene(0);
+            SceneManager.LoadScene(0);
             NewGame();
         }
 
@@ -287,10 +286,13 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetHighScore() {
-        if(this.score > this.highScore) {
-            this.highScore = this.score;
+        if(this.score > HighScore.score) {
+            HighScore.score = this.score;
+
+            // set the highscore in the static class highscore
+            // this.highScore.score = this.score;
         }
-        this.highScoreText.text = highScore.ToString().PadLeft(2, '0');
+        this.highScoreText.text = HighScore.score.ToString().PadLeft(2, '0');
     }
 
     public void PacmanEaten() {
