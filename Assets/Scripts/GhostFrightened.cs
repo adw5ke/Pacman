@@ -25,12 +25,14 @@ public class GhostFrightened : GhostBehavior {
     }
 
     public override void Disable() {
-        base.Disable();
+        if(!this.ghost.ghostEaten.enabled) {
+            base.Disable();
 
-        this.body.enabled = true;
-        this.eyes.enabled = true;
-        this.blue.enabled = false;
-        this.white.enabled = false;
+            this.body.enabled = true;
+            this.eyes.enabled = true;
+            this.blue.enabled = false;
+            this.white.enabled = false;
+        }
     }
 
     // enable and disable appropriate sprites

@@ -453,6 +453,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void PowerPelletEaten(PowerPellet pellet) {
+        this.ghostMultiplier = 1;
         // enable frightened mode for the pellet's duration
         for (int i = 0; i < this.ghosts.Length; i++) {
             if(!this.ghosts[i].ghostEaten.enabled) {
@@ -580,6 +581,17 @@ public class GameManager : MonoBehaviour {
 
     private void StopPowerPelletSound() {
         this.audioManager.Stop("power_pellet");
+        bool atLeastOneIsEaten = false;
+        for (int i = 0; i < this.ghosts.Length; i++) {
+            if(this.ghosts[i].ghostEaten.enabled) {
+                atLeastOneIsEaten = true;
+            }
+        }
+        // if a ghost is eaten when the power pellet is disabled, wait until
+        // the ghost reaches the house before restarting the siren
+        if(atLeastOneIsEaten) {
+            return;
+        }
         this.siren.source.Play();
     }
 
