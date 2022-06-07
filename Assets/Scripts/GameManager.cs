@@ -215,17 +215,21 @@ public class GameManager : MonoBehaviour {
         this.pacman.movement.SetDirection(Vector2.zero, true);
         this.pacman.animation.Restart();
 
-        // stop all sounds
-        this.siren.source.Stop();
-        this.audioManager.StopAll();
-
         // stop all ghosts temporarily 
         for (int i = 0; i < this.ghosts.Length; i++) {
             this.ghosts[i].movement.SetDirection(Vector2.zero, true);
             this.ghosts[i].home.terminate = true;
         }
 
+        // stop all sounds
+        this.siren.source.Stop();
+        this.audioManager.StopAll();
+
         yield return new WaitForSeconds(2);
+
+        // stop all sounds again (just in case)
+        this.siren.source.Stop();
+        this.audioManager.StopAll();
 
         this.currentFruit.gameObject.SetActive(false);
 
@@ -306,6 +310,7 @@ public class GameManager : MonoBehaviour {
         this.roundInProgress = false;
         this.pacman.isKeysEnabled = false;
         this.siren.source.Stop();
+        this.audioManager.StopAll();
 
         Time.timeScale = 0;
 
@@ -464,7 +469,12 @@ public class GameManager : MonoBehaviour {
         this.isFrightened = true;
 
         PelletEaten(pellet);
-        PlayPowerPelletSound();
+
+        // prevents power pellet sound from playing if a power 
+        // pellet is the last pellet that is eaten
+        if (this.pelletsRemaining > 0) {
+            PlayPowerPelletSound();
+        }
 
         // reset power pellet cycle if another one is eaten
         CancelInvoke(nameof(ResetGhostMultiplier));
@@ -592,7 +602,9 @@ public class GameManager : MonoBehaviour {
         if(atLeastOneIsEaten) {
             return;
         }
-        this.siren.source.Play();
+        if(this.gameInProgress && this.roundInProgress) {
+            this.siren.source.Play();
+        }
     }
 
     // private bool HasRemainingPellets() {
