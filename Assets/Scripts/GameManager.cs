@@ -43,8 +43,8 @@ public class GameManager : MonoBehaviour {
     private int[] fruitPoints = { 100, 300, 500, 700, 1000, 2000, 3000, 5000 };
 
     public Fruit currentFruit;
-    public int ghostsEaten = 0; // number of ghosts currently eaten
-                                // TODO: if all 4 ghosts are eaten, then cancel frightened mode
+    private int ghostsEaten = 0;      // number of ghosts currently eaten
+    private int totalGhostsEaten = 0; // total number of ghosts eaten during one power pellet cycle
 
     public Text gameOverText;
     public Text scoreText;
@@ -168,6 +168,7 @@ public class GameManager : MonoBehaviour {
 
         // destroy the fruit if it is displayed
         this.currentFruit.gameObject.SetActive(false);
+        this.totalGhostsEaten = 0;
 
         // reset all the pellets if the player won the previous round
         if(this.resetFromNewRound) {
@@ -358,7 +359,7 @@ public class GameManager : MonoBehaviour {
         this.audioManager.Play("death_2");
     }
 
-    // TOOD: implement this (this is not used anywhere yet)
+    // called by GhostEaten.cs
     public void DisableGhostEaten() {
         if(this.ghostsEaten > 0) {
             this.ghostsEaten--;
@@ -371,14 +372,16 @@ public class GameManager : MonoBehaviour {
     }
 
     // resume the correct sound (power pellet sound or siren) after ghost eaten has been disabled
-    // TODO: fix this; if ghost frighened mode ends while a ghost is eaten (and is traveling back to the house),
+    // fix this; if ghost frighened mode ends while a ghost is eaten (and is traveling back to the house),
     // then the siren will start playing insteading of waiting for the ghost to reach the house
     private void ResumeSound() {
         if(this.gameInProgress && this.roundInProgress) {
-            if(this.isFrightened) {
-                this.audioManager.Play("power_pellet");
-            } else {
+            // resume siren (and not power pellet sound) if all ghosts have been eaten
+            if(this.totalGhostsEaten == 4) {
+                this.totalGhostsEaten = 0;
                 this.siren.source.Play();
+            } else {
+                this.audioManager.Play("power_pellet");
             }
         }        
     }
@@ -390,6 +393,7 @@ public class GameManager : MonoBehaviour {
     // handles the ghost eaten sequence
     private IEnumerator GhostEatenUtility(Ghost ghost) {
         this.ghostsEaten++;
+        this.totalGhostsEaten++;
         this.audioManager.Play("eat_ghost");
 
         // set the score based on the ghost's score multiplier
@@ -459,6 +463,7 @@ public class GameManager : MonoBehaviour {
 
     public void PowerPelletEaten(PowerPellet pellet) {
         this.ghostMultiplier = 1;
+        this.totalGhostsEaten = 0;
         // enable frightened mode for the pellet's duration
         for (int i = 0; i < this.ghosts.Length; i++) {
             if(!this.ghosts[i].ghostEaten.enabled) {
