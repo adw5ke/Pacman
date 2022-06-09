@@ -6778,7 +6778,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9db59b1f7c3f18a488bb7006c8f7d63a, type: 3}
   - {fileID: 21300000, guid: 77161e8e8bee8ad4280d90b263fece75, type: 3}
   currentFruit: {fileID: 375457222}
-  ghostsEaten: 0
   gameOverText: {fileID: 1133529214}
   scoreText: {fileID: 399441304}
   highScoreText: {fileID: 919172433}

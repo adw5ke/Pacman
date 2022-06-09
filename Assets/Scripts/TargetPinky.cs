@@ -12,6 +12,7 @@ public class TargetPinky : MonoBehaviour {
 
     private bool hasMoved = true;    // the target should only move once in scatter mode
     private float xPosition = -7.5f; // temporary x position of the target in scatter mode
+    private float yPosition = 10.5f; // temporary x position of the target in scatter mode
     private float zPosition = -7.0f; // determines draw order
 
     private void Update() {
@@ -38,16 +39,18 @@ public class TargetPinky : MonoBehaviour {
 
             // reset the target for the next transition to scatter mode
             this.xPosition = -7.5f;
+            this.yPosition = 10.5f;
             this.hasMoved = true;
 
         // scatter mode - force pinky to move counter-clockwise in the top-left corner
         } else if (this.ghost.scatter.enabled && !this.ghost.chase.enabled && !this.ghost.ghostEaten.enabled) {
             
-            this.transform.position = new Vector3(xPosition, 16.5f, this.zPosition);
+            this.transform.position = new Vector3(xPosition, yPosition, this.zPosition);
 
             // move the target left
             if (inCircle(this.transform.position, this.ghost.transform.position, 5) && this.hasMoved) {
                 this.xPosition = -11.5f;
+                this.yPosition = 16.5f;
                 this.hasMoved = false;
             }
 

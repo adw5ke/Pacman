@@ -11,6 +11,7 @@ public class TargetBlinky : MonoBehaviour {
 
     private bool hasMoved = true;    // the target should only move once in scatter mode
     private float xPosition = 7.5f;  // temporary x position of the target in scatter mode
+    private float yPosition = 10.5f; // temporary x position of the target in scatter mode
     private float zPosition = -7.0f; // determines draw order
 
     private void Update() {
@@ -30,18 +31,20 @@ public class TargetBlinky : MonoBehaviour {
 
             // reset the target for the next transition to scatter mode
             this.xPosition = 7.5f;
+            this.yPosition = 10.5f;
             this.hasMoved = true;
 
         // scatter mode - target should be in the top right corner
         } else if (this.ghost.scatter.enabled && !this.ghost.chase.enabled && !this.ghost.ghostEaten.enabled) {
             
             // try to force blinky to move clockwise
-            this.transform.position = new Vector3(xPosition, 16.5f, this.zPosition);
+            this.transform.position = new Vector3(xPosition, yPosition, this.zPosition);
 
             // once blinky comes close to the target, move the target to the right (this should only happen once)
             // ensures that Blinky circles the upper right-hand corner clockwise when scatter mode is enabled
             if (inCircle(this.transform.position, this.ghost.transform.position, 5) && this.hasMoved) {
                 this.xPosition = 11.5f;
+                this.yPosition = 16.5f;
                 this.hasMoved = false;
             }
 
