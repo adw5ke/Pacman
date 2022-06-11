@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class GameManager : MonoBehaviour {
     public Ghost[] ghosts;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour {
     private int pelletsRemaining = 244;
     private int totalPellets = 244;  // for internal game use
     private int fruitAppearance = 0; // keeps track of how many times a fruit has appeared in a level (max 2 per level)
+    private int powerPelletDuration = 8;
 
     public bool gameInProgress { get; private set; } = false;
     public bool roundInProgress { get; private set; } = false;
@@ -66,7 +68,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        SetFruit();
+        SetFruit(); // TODO: remove this from update to reset state
         SetHighScore();
 
         // check for game restart
@@ -169,6 +171,7 @@ public class GameManager : MonoBehaviour {
         // destroy the fruit if it is displayed
         this.currentFruit.gameObject.SetActive(false);
         this.totalGhostsEaten = 0;
+        SetPowerPelletDuration();
 
         // reset all the pellets if the player won the previous round
         if(this.resetFromNewRound) {
@@ -467,7 +470,7 @@ public class GameManager : MonoBehaviour {
         // enable frightened mode for the pellet's duration
         for (int i = 0; i < this.ghosts.Length; i++) {
             if(!this.ghosts[i].ghostEaten.enabled) {
-                this.ghosts[i].frightened.Enable(pellet.duration);
+                this.ghosts[i].frightened.Enable(this.powerPelletDuration);
             }
         }
 
@@ -485,9 +488,9 @@ public class GameManager : MonoBehaviour {
         CancelInvoke(nameof(ResetGhostMultiplier));
         CancelInvoke(nameof(StopPowerPelletSound));
         CancelInvoke(nameof(SetIsFrightenedFalse));
-        Invoke(nameof(ResetGhostMultiplier), pellet.duration);
-        Invoke(nameof(StopPowerPelletSound), pellet.duration);
-        Invoke(nameof(SetIsFrightenedFalse), pellet.duration);
+        Invoke(nameof(ResetGhostMultiplier), this.powerPelletDuration);
+        Invoke(nameof(StopPowerPelletSound), this.powerPelletDuration);
+        Invoke(nameof(SetIsFrightenedFalse), this.powerPelletDuration);
     }
 
     // set the fruit sprite and the points based on the level
@@ -533,6 +536,31 @@ public class GameManager : MonoBehaviour {
             return result;
         } else {
             return 7;
+        }
+    }
+
+    // convert level to power pellet duration
+    // the length of the power pellet should generally decrease with each level
+    // the actual lengths by level are 8,7,6,5,4,7,4,4,2,7,4,2,5,4,2,2,0...
+    private void SetPowerPelletDuration() {
+        int[] sevens = { 2, 6, 10 };
+        int[] fives = { 4, 13 };
+        int[] fours = { 5, 7, 8, 11, 14 };
+        int[] twos = { 9, 12, 15, 16 };
+        if (this.level == 1) {
+            this.powerPelletDuration = 8;
+        } else if (sevens.Contains(this.level)) {
+            this.powerPelletDuration = 7;
+        } else if (this.level == 3) {
+            this.powerPelletDuration = 6;
+        } else if (fives.Contains(this.level)) {
+            this.powerPelletDuration = 5;
+        } else if (fours.Contains(this.level)) {
+            this.powerPelletDuration = 4;
+        } else if (twos.Contains(this.level)) {
+            this.powerPelletDuration = 2;
+        } else {
+            this.powerPelletDuration = 0;
         }
     }
 
